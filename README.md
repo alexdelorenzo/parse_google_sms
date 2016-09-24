@@ -18,6 +18,7 @@ Python 3.5+ only
 
 ## Usage
 - Locate the folder in which your Google Voice data is stored
+
   Example: `~/Downloads/Takeout/Voice/Calls`
 
 ```
