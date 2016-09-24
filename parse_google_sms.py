@@ -3,7 +3,7 @@
 from collections import namedtuple
 from datetime import datetime
 from glob import glob
-from typing import List, Generator
+from typing import List, Generator, Iterable
 
 import click
 from bs4 import BeautifulSoup
@@ -47,8 +47,8 @@ def read(filename: str) -> str:
         return f.read()
 
 
-def get_chatlog_filenames(dir: str) -> List[str]:
-    return glob(dir + "/" + SMS_GLOB_FMT)
+def get_chatlog_filenames(location: str) -> List[str]:
+    return glob(location + "/" + SMS_GLOB_FMT)
 
 
 def wrap_chat(chat_html: str) -> BeautifulSoup:
@@ -88,23 +88,20 @@ def parse_chat(chat: BeautifulSoup) -> Chat:
     return Chat(senders, smses)
 
 
-def gen_chats(dir: str) -> Generator[Chat, None, None]:
-    files = get_chatlog_filenames(dir)
-
-    for filename in files:
+def gen_chats(filenames: List[str]) -> Iterable[Chat]:
+    for filename in filenames:
         yield parse_chat(wrap_chat(read(filename)))
 
 
-def save_chats(dir: str):
-    for chat in gen_chats(dir):
+def save_chats(chats: Iterable[Chat]):
+    for chat in chats:
         print(chat.save())
 
 
 @click.command()
-@click.argument("dir")
-def cmd(dir: str):
-    save_chats(dir)
-
+@click.argument("location")
+def cmd(location: str):
+    save_chats(gen_chats(get_chatlog_filenames(location)))
 
 if __name__ == "__main__":
     cmd()
