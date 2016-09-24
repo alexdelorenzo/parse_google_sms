@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+#
+# Copyright 2016 thismachinechills (Alex)
+#
+
 from collections import namedtuple
 from datetime import datetime
 from glob import glob
@@ -13,6 +17,9 @@ DT_FMT = "%Y-%m-%dT%H:%M:%S.%f"
 PRETTY_FMT = "%d %b, %Y %I:%M:%S"
 FILE_FMT = "%d_%b_%Y_%I_%M_%S"
 SMS_GLOB_FMT = "* - Text - *"
+
+CHAT_FILENAME = 'chat_%s_'
+CHAT_FILE_TYPE = ".txt"
 
 
 class Sms(namedtuple('Sms', 'time sender msg')):
@@ -33,8 +40,8 @@ class Chat(namedtuple('Chat', 'senders msgs')):
         if filename is None:
             date = self.msgs[0].time.strftime(FILE_FMT)
             subs = '_'.join('%s' for sub in range(len(self.senders)))
-            fmt = 'chat_%s_' + subs
-            filename = (fmt + '.txt') % (date, *self.senders)
+            fmt = CHAT_FILENAME + subs
+            filename = (fmt + CHAT_FILE_TYPE) % (date, *self.senders)
 
         with open(filename, 'w') as file:
             file.write(str(self))
@@ -102,6 +109,7 @@ def save_chats(chats: Iterable[Chat]):
 @click.argument("location")
 def cmd(location: str):
     save_chats(gen_chats(get_chatlog_filenames(location)))
+
 
 if __name__ == "__main__":
     cmd()
