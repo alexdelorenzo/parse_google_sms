@@ -86,7 +86,7 @@ def parse_chat(chat: BeautifulSoup) -> Chat:
     return Chat(senders, smses)
 
 
-def parse_chats(dir: str) -> Generator[Chat, None, None]:
+def gen_chats(dir: str) -> Generator[Chat, None, None]:
     files = get_chatlog_filenames(dir)
 
     for filename in files:
@@ -94,7 +94,7 @@ def parse_chats(dir: str) -> Generator[Chat, None, None]:
 
 
 def save_chats(dir: str):
-    for chat in parse_chats(dir):
+    for chat in gen_chats(dir):
         print(chat.save())
 
 
