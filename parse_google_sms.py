@@ -50,7 +50,7 @@ def get_chatlog_filenames(dir: str) -> List[str]:
 
 
 def wrap_chat(chat_html: str) -> BeautifulSoup:
-    return BeautifulSoup(chat_html)
+    return BeautifulSoup(chat_html, 'lxml')
 
 
 def get_smses(chat: BeautifulSoup) -> List[BeautifulSoup]:
