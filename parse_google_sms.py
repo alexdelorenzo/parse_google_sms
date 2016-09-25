@@ -7,7 +7,7 @@
 from collections import namedtuple
 from datetime import datetime
 from glob import glob
-from typing import List, Generator, Iterable
+from typing import List, Iterable
 
 import click
 from bs4 import BeautifulSoup
@@ -23,9 +23,6 @@ CHAT_FILE_TYPE = ".txt"
 
 
 class Sms(namedtuple('Sms', 'time sender msg')):
-    def __repr__(self):
-        return str(self)
-
     def __str__(self):
         pretty_date = self.time.strftime(PRETTY_FMT)
 
