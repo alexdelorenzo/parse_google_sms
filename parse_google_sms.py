@@ -9,9 +9,15 @@ from datetime import datetime
 from glob import glob
 from typing import List, Iterable
 
-import click
-from bs4 import BeautifulSoup
+try:
+    from html_wrapper import HtmlWrapper
+    import click
 
+except ImportError as e:
+    raise ImportError("Please install requirements from supplied requirements.txt with pip3") from e
+
+
+ENCODING = 'utf-8'
 
 DT_FMT = "%Y-%m-%dT%H:%M:%S.%f"
 PRETTY_FMT = "%d %b, %Y %I:%M:%S"
@@ -19,7 +25,7 @@ FILE_FMT = "%d_%b_%Y_%I_%M_%S"
 SMS_GLOB_FMT = "* - Text - *"
 
 CHAT_FILENAME = 'chat_%s_'
-CHAT_FILE_TYPE = ".txt"
+CHAT_FILE_SUFFIX = ".txt"
 
 
 class Sms(namedtuple('Sms', 'time sender msg')):
@@ -38,16 +44,16 @@ class Chat(namedtuple('Chat', 'senders msgs')):
             date = self.msgs[0].time.strftime(FILE_FMT)
             subs = '_'.join('%s' for sub in range(len(self.senders)))
             fmt = CHAT_FILENAME + subs
-            filename = (fmt + CHAT_FILE_TYPE) % (date, *self.senders)
+            filename = (fmt + CHAT_FILE_SUFFIX) % (date, *self.senders)
 
-        with open(filename, 'w') as file:
+        with open(filename, 'w', encoding=ENCODING) as file:
             file.write(str(self))
 
         return filename
 
 
 def read(filename: str) -> str:
-    with open(filename, 'r') as f:
+    with open(filename, 'r', encoding=ENCODING) as f:
         return f.read()
 
 
@@ -55,29 +61,29 @@ def get_chatlog_filenames(location: str) -> List[str]:
     return glob(location + "/" + SMS_GLOB_FMT)
 
 
-def wrap_chat(chat_html: str) -> BeautifulSoup:
-    return BeautifulSoup(chat_html, 'lxml')
+def wrap_chat(chat_html: str) -> HtmlWrapper:
+    return HtmlWrapper(chat_html.encode(ENCODING))
 
 
-def get_smses(chat: BeautifulSoup) -> List[BeautifulSoup]:
+def get_smses(chat: HtmlWrapper) -> List[HtmlWrapper]:
     return chat.find_all('div', 'message')
 
 
-def parse_dt(sms: BeautifulSoup, fmt: str = DT_FMT) -> datetime:
+def parse_dt(sms: HtmlWrapper, fmt: str = DT_FMT) -> datetime:
     dt_str = sms.find("abbr", "dt")['title'][:-6]
 
     return datetime.strptime(dt_str, fmt)
 
 
-def parse_sender(sms: BeautifulSoup) -> str:
+def parse_sender(sms: HtmlWrapper) -> str:
     return sms.find("a", "tel").text.strip()
 
 
-def parse_msg(sms: BeautifulSoup) -> str:
+def parse_msg(sms: HtmlWrapper) -> str:
     return sms.find('q').text.strip()
 
 
-def parse_sms(sms: BeautifulSoup) -> Sms:
+def parse_sms(sms: HtmlWrapper) -> Sms:
     time = parse_dt(sms)
     sender = parse_sender(sms)
     msg = parse_msg(sms)
@@ -85,7 +91,7 @@ def parse_sms(sms: BeautifulSoup) -> Sms:
     return Sms(time, sender, msg)
 
 
-def parse_chat(chat: BeautifulSoup) -> Chat:
+def parse_chat(chat: HtmlWrapper) -> Chat:
     smses = [parse_sms(sms) for sms in get_smses(chat)]
     senders = sorted({sms.sender for sms in smses})
 
