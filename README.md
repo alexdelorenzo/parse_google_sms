@@ -4,10 +4,7 @@ Extract text/SMS chats from Google Voice and save them as text files
 Python 3.5+ only
 
 ## Installation
-- Pull the repo
-- Install dependencies w/ pip
-`pip install -r requirements.txt`
-- `chmod +x parse_google_sms.py`
+`pip3 install google_voice_parser`
 
 
 ## Download your Google Voice data
