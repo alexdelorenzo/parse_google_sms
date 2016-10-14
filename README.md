@@ -19,8 +19,8 @@ Pull the repo or `pip3 install google_voice_parser`
   Example: `~/Downloads/Takeout/Voice/Calls`
 
 ```
-alex@mbp:~/Projects/parse_google_sms$ python3 parse_google_sms.py --help
-Usage: parse_google_sms.py [OPTIONS] DIR
+alex@mbp:~/Projects/parse_google_sms$ parse_sms --help
+Usage: parse_sms [OPTIONS] DIR
 
 Options:
   --help  Show this message and exit.

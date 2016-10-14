@@ -5,9 +5,9 @@
 #
 
 from collections import namedtuple
+from typing import List, Iterable
 from datetime import datetime
 from glob import glob
-from typing import List, Iterable
 
 try:
     from html_wrapper import HtmlWrapper
@@ -23,6 +23,7 @@ DT_FMT = "%Y-%m-%dT%H:%M:%S.%f"
 PRETTY_FMT = "%d %b, %Y %I:%M:%S"
 FILE_FMT = "%d_%b_%Y_%I_%M_%S"
 SMS_GLOB_FMT = "* - Text - *"
+SKIP_TZ_INFO = -6
 
 CHAT_FILENAME = 'chat_%s_'
 CHAT_FILE_SUFFIX = ".txt"
@@ -70,7 +71,7 @@ def get_smses(chat: HtmlWrapper) -> List[HtmlWrapper]:
 
 
 def parse_dt(sms: HtmlWrapper, fmt: str = DT_FMT) -> datetime:
-    dt_str = sms.find("abbr", "dt")['title'][:-6]
+    dt_str = sms.find("abbr", "dt")['title'][:SKIP_TZ_INFO]
 
     return datetime.strptime(dt_str, fmt)
 
