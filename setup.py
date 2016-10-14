@@ -11,4 +11,4 @@ setup(name="google_voice_parser",
       zip_safe=True,
       install_requires=["html_wrapper", "click"],
       keywords=["google voice", "voice", "sms", "takeout"],
-      entry_points={"console_scripts": ["parse_sms = google_voice_parser.parser_google_sms:cmd"]})
+      entry_points={"console_scripts": ["parse_sms = google_voice_parser.parse_google_sms:cmd"]})
