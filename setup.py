@@ -2,7 +2,7 @@ from setuptools import setup
 
 
 setup(name="google_voice_parser",
-      version="0.1",
+      version="0.1.1",
       description="Parse SMS from Google Voice",
       url="https://github.com/thismachinechills/parse_google_sms",
       author="thismachinechills (Alex)",
