@@ -33,3 +33,6 @@ chat_02_Dec_2015_05_30_53_Person4_Me.txt
 chat_30_Dec_2015_11_24_16_Person5_Me.txt
 ...
 ```
+
+## License
+See `LICENSE`. Message me if you'd like to use this project with a different license.
